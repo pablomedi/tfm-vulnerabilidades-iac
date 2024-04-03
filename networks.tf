@@ -45,3 +45,24 @@ resource "azurerm_public_ip" "kali_ip" {
   resource_group_name = azurerm_resource_group.resource_gp.name
   allocation_method   = var.allocation_method
 }
+
+resource "azurerm_network_interface" "dvwa_interface" {
+  name                = "${var.prefix}-dvwa-interface"
+  location            = azurerm_resource_group.resource_gp.location
+  resource_group_name = azurerm_resource_group.resource_gp.name
+
+  ip_configuration {
+    name                          = "dvwa-network"
+    subnet_id                     = azurerm_subnet.dmz_subnet.id
+    private_ip_address_allocation = var.private_ip_address_allocation
+    public_ip_address_id          = azurerm_public_ip.dvwa_ip.id
+  }
+}
+
+resource "azurerm_public_ip" "dvwa_ip" {
+  name                = "${var.prefix}-dvwa-ip"
+  location            = azurerm_resource_group.resource_gp.location
+  resource_group_name = azurerm_resource_group.resource_gp.name
+  allocation_method   = var.allocation_method
+  domain_name_label = "tfm2024"
+}

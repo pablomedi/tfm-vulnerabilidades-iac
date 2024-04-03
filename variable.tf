@@ -45,3 +45,11 @@ variable "kali_username" {
 variable "kali_password" {
   description = "Password for user Kali Linux machine"
 }
+
+variable "dvwa_username" {
+  description = "User for DVWA server machine"
+}
+
+variable "dvwa_password" {
+  description = "Password for user DVWA server machine"
+}
