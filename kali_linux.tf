@@ -1,3 +1,23 @@
+resource "azurerm_network_interface" "kali_interface" {
+  name                = "${var.prefix}-kali-interface"
+  location            = azurerm_resource_group.resource_gp.location
+  resource_group_name = azurerm_resource_group.resource_gp.name
+
+  ip_configuration {
+    name                          = "kali-network"
+    subnet_id                     = azurerm_subnet.external_subnet.id
+    private_ip_address_allocation = var.private_ip_address_allocation
+    public_ip_address_id          = azurerm_public_ip.kali_ip.id
+  }
+}
+
+resource "azurerm_public_ip" "kali_ip" {
+  name                = "${var.prefix}-kali-ip"
+  location            = azurerm_resource_group.resource_gp.location
+  resource_group_name = azurerm_resource_group.resource_gp.name
+  allocation_method   = var.allocation_method
+}
+
 resource "azurerm_linux_virtual_machine" "kali_linux" {
   name                            = "${var.prefix}-kali-linux"
   location                        = azurerm_resource_group.resource_gp.location
