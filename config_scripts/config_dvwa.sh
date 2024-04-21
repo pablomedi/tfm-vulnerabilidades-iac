@@ -9,19 +9,18 @@ sudo apt update
 sudo apt-get install -y apache2 mariadb-server mariadb-client php php-mysqli php-gd libapache2-mod-php
 sudo mysql -u root -prootpass< user.sql
 sudo mysql -u root -prootpass< base.sql
-sudo rm -f user.sql
-sudo rm -f base.sql
+sudo rm -f user.sql base.sql
 sudo apt-get clean
 cd /var/www/html
-sudo git clone https://github.com/ethicalhack3r/DVWA.git
+sudo git clone https://github.com/digininja/DVWA.git
 sudo chmod -R 777 DVWA
-sudo sed -i '33s/.*/$_DVWA[ '\''default_security_level'\'' ] = '\''low'\'';/' /var/www/html/DVWA/config/config.inc.php.dist
-sudo sed -i '43s/.*/$_DVWA[ '\''disable_authentication'\'' ] = true;/' /var/www/html/DVWA/config/config.inc.php.dist
 cd DVWA/config 
+awk '/\$_DVWA\[ .default_security_level. \] = .impossible.;/ {$0="$_DVWA[ '\''default_security_level'\'' ] = '\''low'\'';"} 1' config.inc.php.dist > temp && mv temp config.inc.php.dist
+awk '/\$_DVWA\[ .disable_authentication. \] = false;/ {$0="$_DVWA[ '\''disable_authentication'\'' ] = true;"} 1' config.inc.php.dist > temp && mv temp config.inc.php.dist
 sudo cp config.inc.php.dist config.inc.php
-sudo sed -i '865s/.*/allow_url_include = On/' /etc/php/8.1/apache2/php.ini
-sudo sed -i '503s/.*/display_errors = On/' /etc/php/8.1/apache2/php.ini
-sudo sed -i '512s/.*/display_startup_errors = On/' /etc/php/8.1/apache2/php.ini
+awk '/display_errors = Off/ {$0="display_errors = On"} 1' /etc/php/8.1/apache2/php.ini > /etc/php/8.1/apache2/temp && mv /etc/php/8.1/apache2/temp /etc/php/8.1/apache2/php.ini
+awk '/display_startup_errors = Off/ {$0="display_startup_errors = On"} 1' /etc/php/8.1/apache2/php.ini > /etc/php/8.1/apache2/temp && mv /etc/php/8.1/apache2/temp /etc/php/8.1/apache2/php.ini
+awk '/allow_url_include = Off/ {$0="allow_url_include = On"} 1' /etc/php/8.1/apache2/php.ini > /etc/php/8.1/apache2/temp && mv /etc/php/8.1/apache2/temp /etc/php/8.1/apache2/php.ini
 sudo service apache2 restart && sudo service mysql restart
 curl -s -X POST http://tfm2024.northeurope.cloudapp.azure.com/DVWA/login.php -d "username=admin&password=password" -o response.txt
 usertoken=$(grep "<input type='hidden' name='user_token' *" response.txt |  sed 's/.*value=//' | tr -dc '[:alnum:]')
