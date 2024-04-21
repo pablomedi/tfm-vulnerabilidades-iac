@@ -1,0 +1,5 @@
+size                          = "Standard_B1s"
+caching                       = "ReadWrite"
+storage_account_type          = "Standard_LRS"
+allocation_method             = "Dynamic"
+private_ip_address_allocation = "Dynamic"
