@@ -16,7 +16,12 @@ resource "azurerm_public_ip" "dvwa_ip" {
   location            = azurerm_resource_group.resource_gp.location
   resource_group_name = azurerm_resource_group.resource_gp.name
   allocation_method   = var.allocation_method
-  domain_name_label = "tfm2024"
+  domain_name_label   = "tfm2024"
+}
+
+resource "azurerm_network_interface_security_group_association" "dmz_security_group" {
+  network_interface_id      = azurerm_network_interface.dvwa_interface.id
+  network_security_group_id = azurerm_network_security_group.dmz_group.id
 }
 
 resource "azurerm_linux_virtual_machine" "dvwa_server" {
