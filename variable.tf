@@ -53,3 +53,11 @@ variable "dvwa_username" {
 variable "dvwa_password" {
   description = "Password for user DVWA server machine"
 }
+
+variable "honeypot_username" {
+  description = "User for honeypot machine"
+}
+
+variable "honeypot_password" {
+  description = "Password for user honeypot machine"
+}
