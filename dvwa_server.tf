@@ -1,3 +1,4 @@
+#Network interface of dvwa server
 resource "azurerm_network_interface" "dvwa_interface" {
   name                = "${var.prefix}-dvwa-interface"
   location            = azurerm_resource_group.resource_gp.location
@@ -11,6 +12,7 @@ resource "azurerm_network_interface" "dvwa_interface" {
   }
 }
 
+#Public ip of dvwa server and domain name tfm2024
 resource "azurerm_public_ip" "dvwa_ip" {
   name                = "${var.prefix}-dvwa-ip"
   location            = azurerm_resource_group.resource_gp.location
@@ -19,11 +21,13 @@ resource "azurerm_public_ip" "dvwa_ip" {
   domain_name_label   = "tfm2024"
 }
 
+#Union of interface with security group dmz
 resource "azurerm_network_interface_security_group_association" "dmz_security_group" {
   network_interface_id      = azurerm_network_interface.dvwa_interface.id
   network_security_group_id = azurerm_network_security_group.dmz_group.id
 }
 
+#Virtual machine dvwa server with Ubuntu
 resource "azurerm_linux_virtual_machine" "dvwa_server" {
   name                            = "${var.prefix}-dvwa-server"
   location                        = azurerm_resource_group.resource_gp.location

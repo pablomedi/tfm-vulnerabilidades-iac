@@ -1,3 +1,4 @@
+#Network interface of kali linux
 resource "azurerm_network_interface" "kali_interface" {
   name                = "${var.prefix}-kali-interface"
   location            = azurerm_resource_group.resource_gp.location
@@ -11,6 +12,7 @@ resource "azurerm_network_interface" "kali_interface" {
   }
 }
 
+#Public ip of kali linux
 resource "azurerm_public_ip" "kali_ip" {
   name                = "${var.prefix}-kali-ip"
   location            = azurerm_resource_group.resource_gp.location
@@ -18,11 +20,13 @@ resource "azurerm_public_ip" "kali_ip" {
   allocation_method   = var.allocation_method
 }
 
+#Union of interface with security group external
 resource "azurerm_network_interface_security_group_association" "external_security_group" {
   network_interface_id      = azurerm_network_interface.kali_interface.id
   network_security_group_id = azurerm_network_security_group.external_group.id
 }
 
+#Virtual machine with kali linux
 resource "azurerm_linux_virtual_machine" "kali_linux" {
   name                            = "${var.prefix}-kali-linux"
   location                        = azurerm_resource_group.resource_gp.location
