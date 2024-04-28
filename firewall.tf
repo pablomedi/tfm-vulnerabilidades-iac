@@ -1,3 +1,5 @@
+#Firewall´s rules for external subnet
+#Allow all trafic in
 resource "azurerm_network_security_rule" "all_trafic_in_external" {
   name                        = "all-trafic-in-allow-external"
   priority                    = 101
@@ -12,6 +14,7 @@ resource "azurerm_network_security_rule" "all_trafic_in_external" {
   network_security_group_name = azurerm_network_security_group.external_group.name
 }
 
+#Allow all trafic out
 resource "azurerm_network_security_rule" "all_trafic_out_external" {
   name                        = "all-trafic-out-allow-external"
   priority                    = 102
@@ -26,6 +29,8 @@ resource "azurerm_network_security_rule" "all_trafic_out_external" {
   network_security_group_name = azurerm_network_security_group.external_group.name
 }
 
+#Firewall´s rules for dmz subnet
+#Allow trafic in to 80 and 433 ports (http/https) from Internet
 resource "azurerm_network_security_rule" "ports_web_dmz" {
   name                        = "ports-web-dmz"
   priority                    = 101

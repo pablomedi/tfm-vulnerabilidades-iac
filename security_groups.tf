@@ -1,3 +1,4 @@
+#Security groups for each subnet
 resource "azurerm_network_security_group" "dmz_group" {
   name                = "${var.prefix}-dmz-group"
   location            = azurerm_resource_group.resource_gp.location
@@ -10,6 +11,7 @@ resource "azurerm_network_security_group" "external_group" {
   resource_group_name = azurerm_resource_group.resource_gp.name
 }
 
+#Unions subnets with security groups 
 resource "azurerm_subnet_network_security_group_association" "externalnal_attached" {
   subnet_id                 = azurerm_subnet.external_subnet.id
   network_security_group_id = azurerm_network_security_group.external_group.id

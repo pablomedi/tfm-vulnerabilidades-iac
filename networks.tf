@@ -1,3 +1,4 @@
+#Main network
 resource "azurerm_virtual_network" "corporative_network" {
   name                = "${var.prefix}-network"
   address_space       = ["10.0.0.0/16"]
@@ -5,6 +6,7 @@ resource "azurerm_virtual_network" "corporative_network" {
   resource_group_name = azurerm_resource_group.resource_gp.name
 }
 
+#Subnets of main network
 resource "azurerm_subnet" "external_subnet" {
   name                 = "${var.prefix}-external-subnet"
   resource_group_name  = azurerm_resource_group.resource_gp.name
