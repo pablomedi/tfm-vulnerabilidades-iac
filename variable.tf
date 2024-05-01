@@ -20,6 +20,10 @@ variable "size" {
   description = "Specifications of the virtual machine"
 }
 
+variable "size_honeypot" {
+  description = "Specifications of the virtual machine honeypot"
+}
+
 variable "caching" {
   description = "Type of internal caching OS Disk"
 }

@@ -1,3 +1,4 @@
+#Network interface of honeypot
 resource "azurerm_network_interface" "honeypot_interface" {
   name                = "${var.prefix}-honeypot-interface"
   location            = azurerm_resource_group.resource_gp.location
@@ -11,6 +12,7 @@ resource "azurerm_network_interface" "honeypot_interface" {
   }
 }
 
+#Public ip of honeypot
 resource "azurerm_public_ip" "honeypot_ip" {
   name                = "${var.prefix}-honeypot-ip"
   location            = azurerm_resource_group.resource_gp.location
@@ -18,12 +20,13 @@ resource "azurerm_public_ip" "honeypot_ip" {
   allocation_method   = var.allocation_method
 }
 
+#Virtual machine honeypot with Ubuntu, Cowrie, Elasticsearch, Kibana, Logstash
 resource "azurerm_linux_virtual_machine" "honeypot_server" {
   name                            = "${var.prefix}-honeypot"
   location                        = azurerm_resource_group.resource_gp.location
   resource_group_name             = azurerm_resource_group.resource_gp.name
   network_interface_ids           = [azurerm_network_interface.honeypot_interface.id]
-  size                            = var.size
+  size                            = var.size_honeypot
   admin_username                  = var.honeypot_username
   admin_password                  = var.honeypot_password
   disable_password_authentication = false
