@@ -8,7 +8,7 @@ sudo export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 sudo wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
 sudo echo "deb https://artifacts.elastic.co/packages/5.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-5.x.list
 sudo apt update && sudo apt install -y elasticsearch kibana logstash
-
+sudo apt-get install -y binutils debootstrap
 #Configuration logstash
 sudo echo -e 'input {
        stdin {
@@ -80,12 +80,17 @@ sudo awk '/#server.host: "localhost"/ {$0="server.host: \"0.0.0.0\""}'1 /etc/kib
 #Install cowrie
 sudo adduser cowrie --gecos "" --disabled-password
 sudo su - cowrie bash -c "git clone http://github.com/cowrie/cowrie.git && cd cowrie && python3 -m venv cowrie-env && . cowrie-env/bin/activate && python3 -m pip install --upgrade pip && python3 -m pip install --upgrade -r requirements.txt"
+sudo su - cowrie bash - c "mkdir /home/cowrie/ubuntu/"
+sudo debootstrap xenial /home/cowrie/ubuntu/ http://archive.ubuntu.com/ubuntu
 sudo su - cowrie bash -c "echo -e 'vicent:x:1234\nadmin:x:admin\nroot:x:root\nroot:x:toor\nuser:x:qwerty\nmia:x:password' >>  /home/cowrie/cowrie/etc/userdb.txt"
 sudo su - cowrie bash -c "echo -e 'vicent:x:1000:1000:Vicent Vega ,,,:/home/vincent:/bin/bash\nadmin:x:1000:1000:admin group ,,,:/home/admin:/bin/bash\nmia:x:1000:1000:Mia Wallace ,,,:/home/mia:/bin/bash' >>  /home/cowrie/cowrie/honeyfs/etc/passwd"
 sudo su - cowrie bash -c "echo -e 'vicent:*:15800:0:99999:7:::\nadmin:*:15800:0:99999:7:::\nmia:*:15800:0:99999:7:::' >>  /home/cowrie/cowrie/honeyfs/etc/shadow"
-sudo echo -e 'mkdir /etc/apache2\nmkdir /var/www\nmkdir /var/log/apache2\nmkdir /usr/share/doc/apache2\ntouch /etc/apache2/apache2.conf\ntouch /etc/apache2/sites-enabled\ntouch /etc/apache2/sites-available\ntouch /var/www/index.html\ntouch /var/log/apache2/access.log\ntouch /var/log/apache2/error.log\ntouch /usr/share/doc/apache2/doc.txt\nmkdir /home/vicent\nmkdir /home/admin\nmkdir /home/mia\nmkdir /home/user' > script.sh
-sudo chmod +x script.sh
-sudo su - cowrie bash -c "python3 /home/cowrie/cowrie/bin/fsctl /home/cowrie/cowrie/share/cowrie/fs.pickle" < ./script.sh
+sudo echo -e 'useradd -m admin\nuseradd -m vicent\nuseradd -m user\nuseradd -m mia\nchsh -s /bin/bash vicent\nchsh -s /bin/bash admin\nchsh -s /bin/bash user\nchsh -s /bin/bash mia\n' > scriptUser.sh
+sudo chmod +x scriptUser.sh
+sudo chroot /home/cowrie/ubuntu/ < scriptUser.sh
+sudo su - cowrie bash -c "python3 /home/cowrie/cowrie/bin/createfs -l /home/cowrie/ubuntu/ -o localUbuntu.pickle"
+sudo su - cowrie bash -c "mv localUbuntu.pickle /home/cowrie/cowrie/share/cowrie/"
+sudo su - cowrie bash -c "sed -i 's/fs.pickle/localUbuntu.pickle/g' /home/cowrie/cowrie/etc/cowrie.cfg.dist"
 sudo su - cowrie bash -c "sed -i 's/guest_tag = ubuntu18.04/guest_tag = ubuntu22.04/g' /home/cowrie/cowrie/etc/cowrie.cfg.dist"
 sudo su - cowrie bash -c "sed -i 's/hostname = svr04/hostname = corporationStation02/g' /home/cowrie/cowrie/etc/cowrie.cfg.dist"
 sudo su - cowrie bash -c "/home/cowrie/cowrie/bin/cowrie start"
