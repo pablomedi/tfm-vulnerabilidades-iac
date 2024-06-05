@@ -13,3 +13,17 @@ resource "azurerm_network_security_rule" "ports_web_dmz" {
   resource_group_name         = azurerm_resource_group.resource_gp.name
   network_security_group_name = azurerm_network_security_group.dmz_group.name
 }
+
+resource "azurerm_network_security_rule" "internal_dmz" {
+  name                        = "internal_dmz"
+  priority                    = 102
+  direction                   = "Inbound"
+  access                      = "Allow"
+  protocol                    = "*"
+  source_port_range           = "*"
+  destination_port_range      = "*"
+  source_address_prefixes     = azurerm_subnet.internal_subnet.address_prefixes
+  destination_address_prefix  = "*"
+  resource_group_name         = azurerm_resource_group.resource_gp.name
+  network_security_group_name = azurerm_network_security_group.dmz_group.name
+}

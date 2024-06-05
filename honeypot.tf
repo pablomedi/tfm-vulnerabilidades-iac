@@ -20,6 +20,12 @@ resource "azurerm_public_ip" "honeypot_ip" {
   allocation_method   = var.allocation_method
 }
 
+#Union of interface with security group external
+resource "azurerm_network_interface_security_group_association" "internal_security_group" {
+  network_interface_id      = azurerm_network_interface.honeypot_interface.id
+  network_security_group_id = azurerm_network_security_group.internal_group.id
+}
+
 #Virtual machine honeypot with Ubuntu, Cowrie, Elasticsearch, Kibana, Logstash
 resource "azurerm_linux_virtual_machine" "honeypot_server" {
   name                            = "${var.prefix}-honeypot"
