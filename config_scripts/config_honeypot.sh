@@ -1,6 +1,7 @@
 #!/bin/bash
 sudo apt update
 sudo apt-get install -y git python3-virtualenv libssl-dev libffi-dev build-essential libpython3-dev python3-minimal authbind virtualenv
+sudo apt install -y nmap
 sudo apt-get install -y apt-transport-https
 sudo apt-get install -y python3.10-venv
 sudo apt install -y openjdk-8-jre-headless

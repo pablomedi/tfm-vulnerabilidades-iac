@@ -7,6 +7,7 @@ sudo debconf-set-selections <<< 'mariadb-server mysql-server/root_password passw
 sudo debconf-set-selections <<< 'mariadb-server mysql-server/root_password_again password rootpass'
 sudo apt update
 sudo apt-get install -y apache2 mariadb-server mariadb-client php php-mysqli php-gd libapache2-mod-php
+sudo apt install -y nmap
 sudo mysql -u root -prootpass< user.sql
 sudo mysql -u root -prootpass< base.sql
 sudo rm -f user.sql base.sql
