@@ -10,3 +10,4 @@ sudo apt install -y hashcat
 sudo apt install -y sqlmap
 sudo apt-install -y vim
 sudo apt install -y curl
+sudo apt install -y webshells
